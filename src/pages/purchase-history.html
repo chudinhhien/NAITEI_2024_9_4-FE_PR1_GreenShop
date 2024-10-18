@@ -12,18 +12,19 @@
 
   <main>
     <div class="container">
+      <div id="breadcrumb" class="my-8"></div>
       <h2 class="pb-[18px] text-[16px] border-b-[1px] border-b-grey-300 border-b font-bold text-main mb-[30px]">
-        <a href="#" class="pt-[10px]"><span data-i18n="purchase_history.title" class="pb-[17px] border-b-[3px] border-b-main border-b">Lịch sử mua hàng</span></a>
+        <a href="#" class="pt-[10px]"><span data-i18n="purchase-history.title" class="pb-[17px] border-b-[3px] border-b-main border-b">Lịch sử mua hàng</span></a>
       </h2>
-      <table class="min-w-full border border-gray-300 border-collapse md:text-[16px] text-[10px]">
+      <table class="min-w-full border border-gray-300 border-collapse md:text-[16px] text-[10px]" id="history">
         <thead>
           <tr class="bg-main text-white uppercase">
-            <th class="border border-gray-300 p-2"><span data-i18n="purchase_history.order_id"></span></th>
-            <th class="border border-gray-300 p-2"><span data-i18n="purchase_history.order_date"></span></th>
-            <th class="border border-gray-300 p-2"><span data-i18n="purchase_history.order_method"></span></th>
-            <th class="border border-gray-300 p-2"><span data-i18n="purchase_history.total"></span></th>
-            <th class="border border-gray-300 p-2"><span data-i18n="purchase_history.status"></span></th>
-            <th class="border border-gray-300 p-2"><span data-i18n="purchase_history.action"></span></th>
+            <th class="border border-gray-300 p-2"><span data-i18n="purchase-history.order_id"></span></th>
+            <th class="border border-gray-300 p-2"><span data-i18n="purchase-history.order_date"></span></th>
+            <th class="border border-gray-300 p-2"><span data-i18n="purchase-history.order_method"></span></th>
+            <th class="border border-gray-300 p-2"><span data-i18n="purchase-history.total"></span></th>
+            <th class="border border-gray-300 p-2"><span data-i18n="purchase-history.status"></span></th>
+            <th class="border border-gray-300 p-2"><span data-i18n="purchase-history.action"></span></th>
           </tr>
         </thead>
         <tbody>
@@ -85,11 +86,26 @@
 
   <footer id="footer"></footer>
 
-  <script defer src="../../assets/js/request.js"></script>
+  <!-- Modal HTML -->
+  <div id="orderDetailModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+    <div class="bg-white p-8 rounded-lg max-w-md w-full">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold" id="orderModalTitle">Chi tiết đơn hàng</h2>
+        <button id="closeModal" class="text-gray-600 hover:text-gray-800">&times;</button>
+      </div>
+      <div id="orderDetailContent" class="overflow-y-auto max-h-96">
+        <!-- Order details will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="../../assets/js/request.js"></script>
   <script src="../../assets/js/jwtUtil.js"></script>
   <script src="/assets/js/header.js"></script>
   <script src="/assets/js/footer.js"></script>
   <script src="../../assets/js/cart.js"></script>
+  <script src="../../assets/js/breadcrumb.js"></script>
+  <script src="../../assets/js/purchaseHistory.js"></script>
   <script src="/assets/js/i18n.js"></script>
 </body>
 </html>

@@ -111,6 +111,7 @@
     "error_webURL": "Vui lòng nhập một URL hợp lệ.",
     "error_confirmPassword": "Mật khẩu không khớp.",
     "error_comments": "Bình luận là bắt buộc.",
+    "error_login_to_view_cart": "Vui lòng đăng nhập để xem giỏ hàng.",
     "add_to_cart_success": "Thêm vào giỏ hàng thành công !"
   },
   "register": {
@@ -142,9 +143,13 @@
     "total_amount": "Tổng tiền (chưa thuế)",
     "tax": "Thuế (VAT 10%)",
     "total_to_pay": "Tổng phải thanh toán",
-    "payment": "Thanh toán"
+    "payment": "Thanh toán",
+    "payment_method": "Phương thức thanh toán",
+    "credit_card": "Thẻ tín dụng",
+    "paypal": "Paypal",
+    "cod": "Thanh toán khi nhận hàng"
   },
-  "purchase_history": {
+  "purchase-history": {
     "title": "Lịch sử mua hàng",
     "order_id": "Mã đơn hàng",
     "order_date": "Ngày đặt hàng",
@@ -152,7 +157,10 @@
     "total": "Tổng tiền",
     "status": "Trạng thái",
     "action": "Hành động",
-    "view_detail": "Xem chi tiết"
+    "view_detail": "Xem chi tiết",
+    "proccessing": "Đang xử lý",
+    "completed": "Hoàn thành",
+    "cancelled": "Hủy"
   },
   "news_page": {
     "product_category": "Danh mục sản phẩm",
@@ -191,5 +199,13 @@
   },
   "modal": {
     "quantity": "Số lượng"
+  },
+  "order": {
+    "detail": "Chi tiết đơn hàng",
+    "method": "Phương thức thanh toán",
+    "order_date": "Ngày đặt hàng",
+    "status": "Trạng thái",
+    "product_list": "Danh sách sản phẩm",
+    "total_amount": "Tổng tiền (có thuế 10%)"
   }
 }

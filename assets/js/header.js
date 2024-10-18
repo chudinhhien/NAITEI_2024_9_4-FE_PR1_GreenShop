@@ -1,23 +1,50 @@
 fetch('/src/layouts/header.html')
   .then(response => response.text())
-  .then(data => {
+  .then(async (data) => {
     document.getElementById('header').innerHTML = data;
     executeHeaderScripts();
     addLanguageSwitchEvents();
+    
     const currentPath = window.location.pathname;
+    
     if (currentPath.includes('/products') || currentPath === '/src/pages/home.html') {
       showProducts();
     }
-    if(currentPath.includes('/cart')) {
-      if(!isLogin()){
-        window.location.href = '/src/pages/login.html';
+    
+    if (currentPath.includes('/cart')) {
+      if (!isLogin()) {
+        const lang = getLanguage();
+        showToast(await fetch(`../../assets/locales/${lang}.json`).then(response => response.json()).then(data => data.alert.error_login_to_view_cart));
+        setTimeout(() => {
+          window.location.href = '../pages/login.html';
+        }, 3000);
       }
     }
+  
     checkLogin();
     logout();
-    cartHeader();
+    
+    await cartHeader();
+    loadTranslations(getLanguage());
   })
   .catch(error => console.error('Error loading header:', error));
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.classList.add('fixed', 'top-5', 'right-5', 'bg-red-500', 'text-white', 'p-4', 'rounded-md', 'shadow-lg', 'z-50', 'transition-opacity', 'duration-300');
+  toast.innerHTML = `
+    <div class="flex items-center space-x-2">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>${message}</span>
+    </div>
+  `;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('opacity-0');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
 
 const addLanguageSwitchEvents = () => {
   const langViBtn = document.getElementById('lang-vi');
@@ -39,12 +66,15 @@ const addLanguageSwitchEvents = () => {
   }
 }
 
-const switchLanguage = (lang, activeBtn, inactiveBtn) => {
+const switchLanguage = async (lang, activeBtn, inactiveBtn) => {
   const currentPath = window.location.pathname;
   setLanguage(lang);
   if (currentPath.includes('/products') || currentPath === '/src/pages/home.html') {
     showProducts();
+  } else if(currentPath.includes('/cart')) {
+    await cartPage();
   }
+  await cartHeader();
   loadTranslations(lang);
   activeBtn.classList.add('text-green-500');
   inactiveBtn.classList.remove('text-green-500');
@@ -109,7 +139,6 @@ const logout = () => {
     const user = decodeJWT(sessionStorage.getItem('token'));
     let data = {};
     sessionStorage.removeItem('token');
-    console.log(user);
     if(newCart.length > 0){
       data = {
         listCart: newCart,

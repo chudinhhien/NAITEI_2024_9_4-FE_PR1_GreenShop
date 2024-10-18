@@ -107,6 +107,7 @@
     "error_password": "Password must be at least 6 characters long.",
     "error_confirmPassword": "Passwords do not match.",
     "error_comments": "Comments are required.",
+    "error_login_to_view_cart": "Please login to view cart.",
     "add_to_cart_success": "Add to cart successful!"
   },
   "register": {
@@ -142,9 +143,13 @@
     "total_amount": "Total Amount (excluding tax)",
     "tax": "Tax (10% VAT)",
     "total_to_pay": "Total to Pay",
-    "payment": "Payment"
+    "payment": "Payment",
+    "payment_method": "Payment Method",
+    "credit_card": "Credit Card",
+    "paypal": "Paypal",
+    "cod": "Cash on Delivery"
   },
-  "purchase_history": {
+  "purchase-history": {
     "title": "Purchase History",
     "order_id": "Order ID",
     "order_date": "Order Date",
@@ -152,7 +157,10 @@
     "total": "Total",
     "status": "Status",
     "action": "Action",
-    "view_detail": "View detail"
+    "view_detail": "View detail",
+    "proccessing": "Processing",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
   },
   "news_page": {
     "product_category": "Product Categories",
@@ -191,5 +199,13 @@
   },
   "modal": {
     "quantity": "Quantity"
+  },
+  "order": {
+    "detail": "Order Detail",
+    "method": "Payment Method",
+    "order_date": "Order Date",
+    "status": "Status",
+    "product_list": "Product List",
+    "total_amount": "Total Amount (including 10% tax)"
   }
 }

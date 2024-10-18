@@ -14,7 +14,7 @@
     <div class="container mx-auto p-4">
       <h2 class="text-main mt-20 mb-12 uppercase font-bold"><span data-i18n="cart.cart"></span></h2>
       <div class="overflow-x-auto">
-        <table class="min-w-full border border-gray-300 border-collapse md:text-[16px] text-[10px]">
+        <table class="min-w-full border border-gray-300 border-collapse md:text-[16px] text-[10px]" id="table-cart">
           <thead>
             <tr class="bg-main text-white uppercase">
               <th class="border border-gray-300 p-2"><span data-i18n="cart.image"></span></th>
@@ -26,62 +26,65 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="text-center">
-              <td class="border border-gray-300 py-4 px-2 w-48">
-                <a href="#" class="w-full aspect-[3/4]">
-                  <img class="w-full object-cover" src="../../assets/images/spx2-14.webp" alt="Product Image">
-                </a>
-              </td>
-              <td class="border border-gray-300 py-4 px-4 uppercase text-main font-bold">Cây văn phòng</td>
-              <td class="border border-gray-300 py-4 px-2">270.000 đ</td>
-              <td class="border border-gray-300 py-4 px-2">
-                <input class="border border-gray-300 w-12" type="number" min="0">
-              </td>
-              <td class="border border-gray-300 py-4 px-2">270.000 đ</td>
-              <td class="border border-gray-300 py-4 px-2">
-                <button class="text-red-500">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>
       <div class="flex flex-col sm:flex-row justify-end mt-8 space-y-4 sm:space-y-0 sm:space-x-4">
-        <button type="button" class="hover:text-white hover:bg-main border border-1 border-main px-6 py-2 bg-white text-main rounded-full uppercase md:text-sm text-[10px]"><span data-i18n="cart.cancel_order"></span></button>
-        <button type="submit" class="hover:text-main hover:bg-white border border-1 border-main px-6 py-2 bg-main text-white rounded-full uppercase md:text-sm text-[10px]"><span data-i18n="cart.continue_shopping"></span></button>
+        <button type="button" class="hover:text-white hover:bg-main border border-1 border-main px-6 py-2 bg-white text-main rounded-full uppercase md:text-sm text-[10px]" onclick="localStorage.removeItem('cart');window.location.href='/src/pages/home.html'">
+          <span data-i18n="cart.cancel_order"></span>
+        </button>
+        <button type="submit" class="hover:text-main hover:bg-white border border-1 border-main px-6 py-2 bg-main text-white rounded-full uppercase md:text-sm text-[10px]" onclick="window.location.href='/src/pages/product.html'">
+          <span data-i18n="cart.continue_shopping"></span>
+        </button>
       </div>
-      <div class="flex md:justify-end justify-center mt-12">
-        <table class="table-auto border-collapse border border-gray-300 text-center md:text-[16px] text-[10px]">
-          <tbody>
-            <tr>
-              <th class="border border-gray-300 py-4 px-8 uppercase"><span data-i18n="cart.total_amount"></span></th>
-              <td class="border border-gray-300 py-4 px-8">270.000 đ</td>
-            </tr>
-            <tr>
-              <th class="border border-gray-300 py-4 px-8 uppercase"><span data-i18n="cart.tax"></span></th>
-              <td class="border border-gray-300 py-4 px-8">27.000 đ</td>
-            </tr>
-            <tr class="bg-main text-white font-bold">
-              <th class="border border-gray-300 py-4 px-8 uppercase"><span data-i18n="cart.total_to_pay"></span></th>
-              <td class="border border-gray-300 py-4 px-8">297.000 đ</td>
-            </tr>
-          </tbody>
-        </table>       
+      <div class="flex justify-between">
+        <div class="mt-12">
+          <h3 class="text-main uppercase font-bold"><span data-i18n="cart.payment_method"></span></h3>
+          <div class="flex flex-col space-y-4 mt-4">
+            <label class="inline-flex items-center">
+              <input type="radio" class="form-radio h-5 w-5 text-main focus:ring-main checked:bg-main" name="payment-method" value="credit-card">
+              <span class="ml-2 text-[14px]">
+                <i class="fas fa-credit-card mr-2 text-blue-600"></i> 
+                <span data-i18n="cart.credit_card"></span>
+              </span>
+            </label>
+            <label class="inline-flex items-center">
+              <input type="radio" class="form-radio h-5 w-5 text-main" name="payment-method" value="paypal">
+              <span class="ml-2 text-[14px]">
+                <i class="fab fa-paypal mr-2 text-yellow-500"></i> 
+                PayPal
+              </span>
+            </label>
+            <label class="inline-flex items-center">
+              <input type="radio" class="form-radio h-5 w-5 text-main" name="payment-method" value="cod" checked>
+              <span class="ml-2 text-[14px]">
+                <i class="fas fa-money-bill-wave mr-2 text-green-600"></i> 
+                <span data-i18n="cart.cod"></span>
+              </span>
+            </label>
+          </div>
+        </div>        
+        <div class="flex md:justify-end justify-center mt-12" id="total-amount">
+          <table class="table-auto border-collapse border border-gray-300 text-center md:text-[16px] text-[10px]">
+            <tbody>
+            </tbody>
+          </table>       
+        </div>
       </div>
       <div class="flex justify-end mt-8">
-        <button type="submit" class="hover:text-main hover:bg-white border border-1 border-main px-6 py-2 bg-main text-white rounded-full uppercase md:text-sm text-[10px]"><span data-i18n="cart.payment"></span></button>
+        <button id="payment" type="submit" class="hover:text-main hover:bg-white border border-1 border-main px-6 py-2 bg-main text-white rounded-full uppercase md:text-sm text-[10px]"><span data-i18n="cart.payment"></span></button>
       </div>
     </div>
   </main>
   
   <footer id="footer"></footer>
   
-  <script defer src="../../assets/js/request.js"></script>
+  <script src="../../assets/js/request.js"></script>
   <script src="../../assets/js/jwtUtil.js"></script>
   <script src="../../assets/js/header.js"></script>
   <script src="../../assets/js/footer.js"></script>
   <script src="../../assets/js/cart.js"></script>
+  <script src="../../assets/js/order.js"></script>
   <script src="../../assets/js/i18n.js"></script>
 </body>
 </html>

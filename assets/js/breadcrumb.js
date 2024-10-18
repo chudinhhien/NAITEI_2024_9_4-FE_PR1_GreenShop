@@ -7,7 +7,7 @@ function renderBreadcrumb() {
 
     // Tạo mảng chứa các breadcrumb
     const breadcrumbArray = currentUrl.split('/').filter(item => item !== '');
-    breadcrumbHTML += '<a class="hover:underline text-main">' + `<span data-i18n="${breadcrumbArray.pop().replace(/\.html$/, '')}.title"></span>` + '</a>';
+    breadcrumbHTML += '<a class="text-main">' + `<span data-i18n="${breadcrumbArray.pop().replace(/\.html$/, '')}.title"></span>` + '</a>';
 
     // Chèn breadcrumb vào HTML
     breadcrumbContainer.innerHTML = breadcrumbHTML;

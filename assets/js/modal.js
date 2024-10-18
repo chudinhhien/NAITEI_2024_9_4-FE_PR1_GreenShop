@@ -128,24 +128,28 @@ const productModal = async (id) => {
     quantity.value = parseInt(quantity.value) + 1;
   });
 
-  document.querySelector('.btn-add-to-cart').addEventListener('click', () => {
+  document.querySelector('.btn-add-to-cart').addEventListener('click', async () => {
     if (!isLogin()) {
-      window.location.href = '../pages/login.html';
+      showToast(await fetch(`../../assets/locales/${currentLanguage}.json`).then(response => response.json()).then(data => data.alert.error_login_to_view_cart));
+      setTimeout(() => {
+        window.location.href = '../pages/login.html';
+      }, 3000);
       return;
     }
     const quantity = document.getElementById('quantity').value;
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const productIndex = cart.findIndex((item) => item.id === product.id);
+    const productIndex = cart.findIndex((item) => item.productId === product.id);
+
 
     if (productIndex === -1) {
-        cart.push({ ...product, quantity: parseInt(quantity) });
+        cart.push({"productId": id, quantity: parseInt(quantity) });
     } else {
         cart[productIndex].quantity += parseInt(quantity);
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
     
-    cartHeader();
+    await cartHeader();
     loadTranslations(currentLanguage);
 
     toast.classList.remove('hidden');

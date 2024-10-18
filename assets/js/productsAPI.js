@@ -1,25 +1,25 @@
 const toast = document.getElementById('cart-toast');
 const addToCart = async (productId) => {
+  const currentLanguage = localStorage.getItem('userLanguage') || 'vi';
   if (!isLogin()) {
-    window.location.href = '../pages/login.html';
+    showToast(await fetch(`../../assets/locales/${currentLanguage}.json`).then(response => response.json()).then(data => data.alert.error_login_to_view_cart));
+    setTimeout(() => {
+      window.location.href = '../pages/login.html';
+    }, 3000);
     return;
   }
-  const currentLanguage = localStorage.getItem('userLanguage') || 'vi';
-  const product = await get(`${currentLanguage}/products/${productId}`);
-  if (!product) return; 
-
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const productIndex = cart.findIndex((item) => item.id === product.id);
+  const productIndex = cart.findIndex((item) => item.productId === productId);
 
   if (productIndex === -1) {
-    cart.push({ ...product, quantity: 1 });
+    cart.push({"productId": productId , quantity: 1 });
   } else {
     cart[productIndex].quantity += 1;
   }
 
   localStorage.setItem('cart', JSON.stringify(cart));
 
-  cartHeader();
+  await cartHeader();
   loadTranslations(currentLanguage);
 
   toast.classList.remove('hidden');
@@ -30,7 +30,6 @@ const addToCart = async (productId) => {
       setTimeout(() => toast.classList.add('hidden'), 500);
   }, 1000);
 };
-
 
 const showProducts = async () => {
   const currentLanguage = localStorage.getItem('userLanguage') || 'vi';

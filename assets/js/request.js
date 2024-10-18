@@ -19,16 +19,15 @@ const get = async (path) => {
 
 const getCartByUserId = async (path,userId) => {
   try {
-      console.log(`${API_DOMAIN}/${path}?userId=${userId}`);
-      const response = await fetch(`${API_DOMAIN}${path}?userId=${userId}`);
+    const response = await fetch(`${API_DOMAIN}${path}?userId=${userId}`);
 
-      if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Error ${response.status}: ${errorText}`);
-      }
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error ${response.status}: ${errorText}`);
+    }
 
-      const result = await response.json();
-      return result;
+    const result = await response.json();
+    return result;
   } catch (error) {
       console.error("Fetch error:", error);
       throw error;

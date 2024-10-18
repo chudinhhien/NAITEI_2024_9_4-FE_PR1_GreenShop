@@ -1,13 +1,22 @@
-const cartHeader = () => {
+const cartHeader = async () => {
   const cartHeaderElement = document.getElementById('cart-header');
   const quantity = cartHeaderElement.querySelector('#quantity-card-header');
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const cartContent = document.getElementById('cart-header-content');
+  const currentLanguage = localStorage.getItem('userLanguage') || 'vi';
   quantity.innerHTML = cart.length;
 
   if (cart.length > 0) {
     let totalAmount = 0;
-    cartContent.innerHTML = cart.map(item => {
+    const productIds = cart.map(item => item.productId).join('&id=');
+    let products = await get(`${currentLanguage}/products?id=${productIds}`);
+    products = products.map(product => {
+      return {
+        ...product,
+        quantity: cart.find(item => item.productId === product.id).quantity
+      }
+    })
+    cartContent.innerHTML = products.map(item => {
       const productTotal = item.price * item.quantity;
       totalAmount += productTotal;
       return `
@@ -42,10 +51,11 @@ const cartHeader = () => {
     `;
 
     document.querySelectorAll('.cart-item button').forEach(button => {
-      button.addEventListener('click', (event) => {
+      button.addEventListener('click', async (event) => {
         const productId = event.currentTarget.getAttribute('data-id');
         removeFromCart(productId);
-        cartHeader();
+        await cartHeader();
+        loadTranslations(getLanguage());
       });
     });
   } else {
@@ -62,9 +72,128 @@ const cartHeader = () => {
 
 const removeFromCart = (id) => {
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  
+
   id = parseInt(id);
-  cart = cart.filter(item => item.id !== id);
+  cart = cart.filter(item => item.productId !== id);
   localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+const calculateTotal = (products) => {
+  const total = document.getElementById('total-amount');
+  const totalContent = total.querySelector('tbody');
+  let subtotal = 0;
+
+  products.forEach(item => {
+    subtotal += item.price * item.quantity;
+  });
+
+  const tax = subtotal * 0.10;
+  const totalToPay = subtotal + tax;
+
+  totalContent.innerHTML = `
+    <tr>
+      <th class="border border-gray-300 py-4 px-8 uppercase"><span data-i18n="cart.total_amount"></span></th>
+      <td class="border border-gray-300 py-4 px-8">${subtotal} đ</td>
+    </tr>
+    <tr>
+      <th class="border border-gray-300 py-4 px-8 uppercase"><span data-i18n="cart.tax"></span></th>
+      <td class="border border-gray-300 py-4 px-8">${tax} đ</td>
+    </tr>
+    <tr class="bg-main text-white font-bold">
+      <th class="border border-gray-300 py-4 px-8 uppercase"><span data-i18n="cart.total_to_pay"></span></th>
+      <td class="border border-gray-300 py-4 px-8" id="totalToPay">${totalToPay} đ</td>
+    </tr>
+  `;
+
   loadTranslations(getLanguage());
+}
+
+const updateCart = async (id, newQuantity) => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  const productIndex = cart.findIndex(item => item.productId === id);
+  if (productIndex !== -1) {
+    cart[productIndex].quantity = newQuantity;
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    await cartHeader();
+    loadTranslations(getLanguage());
+    await cartPage();
+  }
+}
+
+const removeFromCartPage = async (id) => {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  id = parseInt(id);
+  cart = cart.filter(item => item.productId !== id);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  await cartHeader();
+  loadTranslations(getLanguage());
+  await cartPage();
+}
+
+const cartPage = async () => {
+  const cartTable = document.getElementById('table-cart');
+  const cartContent = cartTable.querySelector('tbody');
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const productIds = cart.map(item => item.productId).join('&id=');
+  const currentLanguage = localStorage.getItem('userLanguage') || 'vi';
+  let products = await get(`${currentLanguage}/products?id=${productIds}`);
+  products = products.map(product => {
+    return {
+      ...product,
+      quantity: cart.find(item => item.productId === product.id).quantity
+    }
+  })
+
+  cartContent.innerHTML = products.map(item => {
+    const productTotal = item.price * item.quantity;
+    return `
+      <tr class="text-center">
+        <td class="border border-gray-300 py-4 px-2 w-48">
+          <a href="#" class="w-full aspect-[3/4]">
+            <img class="w-full object-cover" src="../../assets/images/${item.images[0]}" alt="${item.name}">
+          </a>
+        </td>
+        <td class="border border-gray-300 py-4 px-4 uppercase text-main font-bold">${item.name}</td>
+        <td class="border border-gray-300 py-4 px-2">${item.price} đ</td>
+        <td class="border border-gray-300 py-4 px-2">
+          <input 
+            class="border border-gray-300 w-12 text-center focus:border-main focus:outline-none" 
+            type="number" 
+            min="1" 
+            value="${item.quantity}" 
+            data-id="${item.id}" 
+          >
+        </td>
+        <td class="border border-gray-300 py-4 px-2">${productTotal} đ</td>
+        <td class="border border-gray-300 py-4 px-2">
+          <button class="text-red-500" onclick="removeFromCartPage(${item.id})">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  calculateTotal(products);
+
+  cartContent.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('change', async (e) => {
+      const newQuantity = parseInt(e.target.value, 10);
+      const productId = e.target.dataset.id;
+
+      if (newQuantity >= 1) {
+        await updateCart(parseInt(productId), newQuantity);
+      } else {
+        e.target.value = 1;
+      }
+    });
+  });
+}
+
+if(window.location.pathname.includes('cart.html')){
+  cartPage();
 }
